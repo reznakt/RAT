@@ -147,3 +147,5 @@ cython_debug/
 # IDEA
 .idea/
 *.iml
+
+main.py
