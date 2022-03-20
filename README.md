@@ -29,5 +29,5 @@ if __name__ == '__main__':
         lambda: ProcessInput(generate_input(), ["--flag"]),
         CMP_ALL
     )
-    exit(0 if runner.run(TESTS) else 1)
+    exit(0 if runner.run() else 1)
 ```
