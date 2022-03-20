@@ -8,9 +8,9 @@ install:
 pip install git+https://github.com/sneklingame/RAT
 ```
 
-update:
+upgrade:
 ```console
-pip install git+https://github.com/sneklingame/RAT -U
+pip install --upgrade --no-deps --force-reinstall git+https://github.com/sneklingame/RAT
 ```
 
 ## Usage
