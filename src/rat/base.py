@@ -200,7 +200,7 @@ class Runner:
                 sys.stderr.write("stdout: \n")
             sys.stderr.write(f"{repr(proc.stdout)}\n\n")
             with ansi_format(Fore.RED, Style.BRIGHT, stream=sys.stderr):
-                sys.stderr.write("stdin: \n")
+                sys.stderr.write("stderr: \n")
             sys.stderr.write(f"{repr(proc.stderr)}\n\n")
 
         sys.stderr.flush()
