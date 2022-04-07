@@ -52,6 +52,7 @@ class ProcessOutput(__RATInternalBase):
     exit_code: int
     stdout: str
     stderr: str
+    path: str
 
 
 Comparator = Callable[[ProcessOutput, ProcessOutput], bool]
@@ -97,15 +98,17 @@ class Test(__RATInternalBase):
         self.input = __input
 
     def _execute(self, __exec: str) -> ProcessOutput:
+        cmd = f"{__exec} " + " ".join(self.input.argv)
+
         p = subprocess.Popen(
-            f"{__exec} " + " ".join(self.input.argv),
+            cmd,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             shell=True, text=True
         )
         stdout, stderr = p.communicate(input=self.input.stdin, timeout=PROCESS_TIMEOUT / 1000)
-        return ProcessOutput(p.returncode, stdout, stderr)
+        return ProcessOutput(p.returncode, stdout, stderr, cmd)
 
     def run(self, exec1: str, exec2: str, comparator: Comparator) -> TestResult:
         r1, r2 = self._execute(exec1), self._execute(exec2)
@@ -188,10 +191,10 @@ class Runner:
             sys.stderr.write("args: \n")
         sys.stderr.write(f"{repr(test_result.test.input.argv)}\n\n")
 
-        for i, proc in enumerate((test_result.exec1, test_result.exec2), start=1):
+        for proc in (test_result.exec1, test_result.exec2):
             sys.stderr.write("\n\n")
             with ansi_format(Fore.BLUE, Style.BRIGHT, stream=sys.stderr):
-                sys.stderr.write(f"exec{i}:\n\n")
+                sys.stderr.write(f"{proc.path}:\n\n")
             with ansi_format(Fore.MAGENTA, Style.BRIGHT, stream=sys.stderr):
                 sys.stderr.write("Exit code: ")
             with ansi_format(Fore.RED if proc.exit_code else Fore.GREEN, stream=sys.stderr):
