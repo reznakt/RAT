@@ -13,6 +13,17 @@ from colorama import Fore, Style
 
 PROCESS_TIMEOUT = 1000
 
+EXIT_CODES = {
+    132: "SIGILL",
+    133: "SIGTRAP",
+    134: "SIGABRT",
+    136: "SIGFPE",
+    138: "SIGBUS",
+    139: "SIGSEGV",
+    158: "SIGXCPU",
+    159: "SIGXFSZ"
+}
+
 
 class ansi_format:
     def __init__(self, *args: str, stream: TextIO = sys.stdout) -> None:
@@ -106,7 +117,8 @@ class Test(__RATInternalBase):
             shell=True, text=True
         )
         stdout, stderr = p.communicate(input=self.input.stdin, timeout=PROCESS_TIMEOUT / 1000)
-        return ProcessOutput(p.returncode, stdout, stderr, __exec)
+        rc = p.returncode if p.returncode >= 0 else 128 - p.returncode
+        return ProcessOutput(rc, stdout, stderr, __exec)
 
     def run(self, exec1: str, exec2: str, comparator: Comparator) -> TestResult:
         r1, r2 = self._execute(exec1), self._execute(exec2)
@@ -194,9 +206,12 @@ class Runner:
             with ansi_format(Fore.BLUE, Style.BRIGHT, stream=sys.stderr):
                 sys.stderr.write(f"{proc.path}:\n\n")
             with ansi_format(Fore.MAGENTA, Style.BRIGHT, stream=sys.stderr):
-                sys.stderr.write("Exit code: ")
+                sys.stderr.write("exit code: ")
             with ansi_format(Fore.RED if proc.exit_code else Fore.GREEN, stream=sys.stderr):
-                sys.stderr.write(f"{proc.exit_code}\n\n")
+                sys.stderr.write(f"{proc.exit_code}")
+                if proc.exit_code in EXIT_CODES:
+                    sys.stderr.write(f"({EXIT_CODES[proc.exit_code]})")
+                sys.stderr.write("\n\n")
             with ansi_format(Fore.YELLOW, Style.BRIGHT, stream=sys.stderr):
                 sys.stderr.write("stdout: \n")
             sys.stderr.write(f"{repr(proc.stdout)}\n\n")
