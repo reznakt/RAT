@@ -98,17 +98,15 @@ class Test(__RATInternalBase):
         self.input = __input
 
     def _execute(self, __exec: str) -> ProcessOutput:
-        cmd = f"{__exec} " + " ".join(self.input.argv)
-
         p = subprocess.Popen(
-            cmd,
+            f"{__exec} " + " ".join(self.input.argv),
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             shell=True, text=True
         )
         stdout, stderr = p.communicate(input=self.input.stdin, timeout=PROCESS_TIMEOUT / 1000)
-        return ProcessOutput(p.returncode, stdout, stderr, cmd)
+        return ProcessOutput(p.returncode, stdout, stderr, __exec)
 
     def run(self, exec1: str, exec2: str, comparator: Comparator) -> TestResult:
         r1, r2 = self._execute(exec1), self._execute(exec2)
