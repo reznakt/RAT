@@ -210,7 +210,7 @@ class Runner:
             with ansi_format(Fore.RED if proc.exit_code else Fore.GREEN, stream=sys.stderr):
                 sys.stderr.write(f"{proc.exit_code}")
                 if proc.exit_code in EXIT_CODES:
-                    sys.stderr.write(f"({EXIT_CODES[proc.exit_code]})")
+                    sys.stderr.write(f" ({EXIT_CODES[proc.exit_code]})")
                 sys.stderr.write("\n\n")
             with ansi_format(Fore.YELLOW, Style.BRIGHT, stream=sys.stderr):
                 sys.stderr.write("stdout: \n")
