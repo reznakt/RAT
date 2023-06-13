@@ -5,12 +5,12 @@ Welcome to RAT, a simple RAndom Testing framework.
 
 install:
 ```console
-pip install git+https://github.com/sneklingame/RAT
+pip install git+https://github.com/reznakt/RAT
 ```
 
 upgrade:
 ```console
-pip install --upgrade --no-deps --force-reinstall git+https://github.com/sneklingame/RAT
+pip install --upgrade --no-deps --force-reinstall git+https://github.com/reznakt/RAT
 ```
 
 ## Usage
